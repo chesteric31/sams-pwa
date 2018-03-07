@@ -1,5 +1,7 @@
 <template>
   <div class="categories">
+    <vue-accordion :items="menus"></vue-accordion>
+
     <h1>Categories</h1>
     <ul v-if="categories && categories.length">
       <li v-for="category of categories">
@@ -10,13 +12,18 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import axios from 'axios'
+import {vueAccordion} from 'vue-accordion'
+
+Vue.component('vueAccordion', vueAccordion)
 
 export default {
   name: 'categories',
   data () {
     return {
-      categories: []
+      categories: [],
+      menus: []
     }
   },
   created () {
@@ -27,6 +34,16 @@ export default {
       axios.get('https://ksams.herokuapp.com/api/categories')
         .then(response => {
           this.categories = response.data._embedded.categories
+          let tmp = []
+          this.categories.map((value, key) => {
+            tmp.push({
+              title: value.name,
+              text: 'text',
+              url: '#',
+              image: '/images'
+            })
+          })
+          this.menus = tmp
         })
     }
   }
